@@ -1,0 +1,9 @@
+# Data directories
+/data/
+*.csv
+*.json
+*.pkl
+
+# Cache files
+__pycache__/
+.ipynb_checkpoints/

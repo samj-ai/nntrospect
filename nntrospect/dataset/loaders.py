@@ -109,24 +109,38 @@ class DatasetLoader:
                     "id": item.get("id", str(len(processed_data)))
                 }
                 processed_data.append(processed_item)
-        
+
         elif "openbookqa" in dataset_name:
             for item in dataset:
-                choices = [
-                    item["question"]["choices"][i]["text"] 
-                    for i in range(len(item["question"]["choices"]))
-                ]
-                answer_key = item["answerKey"]
-                answer_index = ord(answer_key) - ord("A")
-                
-                processed_item = {
-                    "question": item["question"]["stem"],
-                    "choices": choices,
-                    "answer_index": answer_index,
-                    "dataset": dataset_name,
-                    "id": item.get("id", str(len(processed_data)))
-                }
-                processed_data.append(processed_item)
+                try:
+                    # Updated OpenBookQA structure has fields directly accessible
+                    choices_data = item["choices"]
+                    # Check the structure of choices
+                    if isinstance(choices_data, list):
+                        # If it's a list of dictionaries with 'text' field
+                        choices_text = [choice["text"] for choice in choices_data]
+                    elif isinstance(choices_data, dict) and "text" in choices_data:
+                        # If it's a dict with lists
+                        choices_text = choices_data["text"]
+                    else:
+                        print(f"Unexpected choices structure: {choices_data}")
+                        continue
+                        
+                    answer_key = item["answerKey"]
+                    # Convert answerKey (e.g., "A") to index (0)
+                    answer_index = ord(answer_key) - ord("A")
+                    
+                    processed_item = {
+                        "question": item["question_stem"],  # Changed from item["question"]["stem"]
+                        "choices": choices_text,
+                        "answer_index": answer_index,
+                        "dataset": dataset_name,
+                        "id": item.get("id", str(len(processed_data)))
+                    }
+                    processed_data.append(processed_item)
+                except Exception as e:
+                    print(f"Error processing OpenBookQA item: {e}")
+                    print(f"Item structure: {item.keys()}")
         
         else:
             # Generic processing for unknown datasets
