@@ -6,6 +6,7 @@ this is a work in progress. it will probably not work for you yet.
 
 blueprint:  
 
+```
 nntrospect/
 ├── README.md               # Project overview, installation instructions, examples
 ├── LICENSE                 # License file (MIT, Apache, etc.)
@@ -45,3 +46,4 @@ nntrospect/
     ├── test_loaders.py     # Tests for dataset loaders
     ├── test_biases.py      # Tests for bias generators
     └── test_utils.py       # Tests for utilities
+```
